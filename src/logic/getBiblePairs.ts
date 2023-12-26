@@ -1,3 +1,13 @@
+// Settings for which books to show
+const showBooks = {
+  all: true,
+  hebrews: false,
+  profets: false,
+  majorProfets: false,
+  minorProfets: false,
+  greeks: false,
+};
+
 export type BookPair = { book: string; abbreviation: string };
 export type BookTuple = { firstBook: BookPair; secondBook: BookPair; correctBook: BookPair };
 
@@ -38,7 +48,7 @@ export const bibleBooks: BookPair[] = [
   { book: "Nahúm", abbreviation: "Nah." },
   { book: "Habacuc", abbreviation: "Hab." },
   { book: "Sofonías", abbreviation: "Sof." },
-  { book: "Hageo", abbreviation: "Hag." },
+  { book: "Ageo", abbreviation: "Ag." },
   { book: "Zacarías", abbreviation: "Zac." },
   { book: "Malaquías", abbreviation: "Mal." },
   { book: "Mateo", abbreviation: "Mat." },
@@ -71,14 +81,26 @@ export const bibleBooks: BookPair[] = [
 ];
 
 export function getBookPairs(level: 1 | 2 | 3): BookTuple {
+  // Filter the books to show
+  const filteredBibleBooks = bibleBooks.filter(({ book }, index, arr) => {
+    if (showBooks.all) return true;
+    if (showBooks.hebrews && index < 39) return true;
+    if (showBooks.profets && index > 21 && index < 39) return true;
+    if (showBooks.majorProfets && index > 21 && index < 27) return true;
+    if (showBooks.minorProfets && index >= 27 && index < 39) return true;
+    if (showBooks.greeks && index >= 39) return true;
+  });
+
+  console.log({ filteredBibleBooks });
+
   const getRandomBook = (): BookPair => {
-    const randomIndex = Math.floor(Math.random() * bibleBooks.length);
-    return bibleBooks[randomIndex];
+    const randomIndex = Math.floor(Math.random() * filteredBibleBooks.length);
+    return filteredBibleBooks[randomIndex];
   };
 
   const getRandomBookFarAway = (baseIndex: number, range: number, excludedIndex: number): BookPair => {
     const minIndex = Math.max(0, baseIndex - range);
-    const maxIndex = Math.min(bibleBooks.length - 1, baseIndex + range);
+    const maxIndex = Math.min(filteredBibleBooks.length - 1, baseIndex + range);
     let randomIndex = Math.floor(Math.random() * (maxIndex - minIndex + 1)) + minIndex;
 
     // Ensure the randomly selected index is not the excluded index (index of firstBook)
@@ -86,7 +108,7 @@ export function getBookPairs(level: 1 | 2 | 3): BookTuple {
       randomIndex = Math.floor(Math.random() * (maxIndex - minIndex + 1)) + minIndex;
     }
 
-    return bibleBooks[randomIndex];
+    return filteredBibleBooks[randomIndex];
   };
 
   const firstBook = getRandomBook();
@@ -96,23 +118,35 @@ export function getBookPairs(level: 1 | 2 | 3): BookTuple {
   switch (level) {
     case 1:
       range = Math.floor(Math.random() * 6) + 10; // 10-15 books far away
-      secondBook = getRandomBookFarAway(bibleBooks.indexOf(firstBook), range, bibleBooks.indexOf(firstBook));
+      secondBook = getRandomBookFarAway(
+        filteredBibleBooks.indexOf(firstBook),
+        range,
+        filteredBibleBooks.indexOf(firstBook)
+      );
       break;
     case 2:
       range = Math.floor(Math.random() * 6) + 5; // 5-10 books far away
-      secondBook = getRandomBookFarAway(bibleBooks.indexOf(firstBook), range, bibleBooks.indexOf(firstBook));
+      secondBook = getRandomBookFarAway(
+        filteredBibleBooks.indexOf(firstBook),
+        range,
+        filteredBibleBooks.indexOf(firstBook)
+      );
       break;
     case 3:
       range = Math.floor(Math.random() * 5) + 1; // 1-5 books far away
-      secondBook = getRandomBookFarAway(bibleBooks.indexOf(firstBook), range, bibleBooks.indexOf(firstBook));
+      secondBook = getRandomBookFarAway(
+        filteredBibleBooks.indexOf(firstBook),
+        range,
+        filteredBibleBooks.indexOf(firstBook)
+      );
       break;
     default:
       throw new Error("Invalid level. Choose 1, 2, or 3.");
   }
 
-  const indexFirstBook = bibleBooks.findIndex(({ book }) => book === firstBook.book);
-  const indexSecondBook = bibleBooks.findIndex(({ book }) => book === secondBook.book);
-  const correctBook = bibleBooks[Math.max(indexFirstBook, indexSecondBook)];
+  const indexFirstBook = filteredBibleBooks.findIndex(({ book }) => book === firstBook.book);
+  const indexSecondBook = filteredBibleBooks.findIndex(({ book }) => book === secondBook.book);
+  const correctBook = filteredBibleBooks[Math.max(indexFirstBook, indexSecondBook)];
 
   return { firstBook, secondBook, correctBook };
 }

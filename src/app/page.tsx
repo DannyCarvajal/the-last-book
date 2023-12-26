@@ -48,9 +48,9 @@ export default function Home() {
   };
 
   const emojiBasedOnPoints = () => {
-    if (points.current < 90) return "💀💩💀";
-    if (points.current < 60) return "💀💀";
-    if (points.current < 30) return "💀";
+    if (points.current < -90) return "💀💩💀";
+    if (points.current < -60) return "💀💀";
+    if (points.current < -30) return "💀";
     if (points.current < 0) return "😭";
     if (points.current < 50) return "👍🏻";
     if (points.current < 100) return "😀";
@@ -135,9 +135,9 @@ export default function Home() {
 
   if (start && book) {
     return (
-      <main className="relative flex min-h-screen justify-between">
+      <main className="relative flex min-h-screen justify-between flex-wrap">
         <div
-          className="relative flex-1 border-2 cursor-pointer border-x-emerald-300 hover:bg-neutral-950 duration-500"
+          className="relative flex-1 flex-wrap border-2 cursor-pointer border-x-emerald-300 hover:bg-neutral-950 duration-500"
           onClick={() => checkAnswer(book.firstBook.book)}
         >
           {/* Legend choose the last book */}
@@ -145,7 +145,7 @@ export default function Home() {
             Elige el último libro 📖
           </div>
 
-          <div className="flex flex-col items-center justify-center h-full">
+          <div className="flex flex-col items-center justify-center h-full min-w-[500px]">
             <h2 className="text-6xl font-bold text-white">{book.firstBook.book}</h2>
           </div>
           {/* Time left */}
@@ -157,7 +157,7 @@ export default function Home() {
         </div>
 
         <div
-          className="cursor-pointer flex-1 hover:bg-neutral-950 duration-500"
+          className="cursor-pointer flex-1 hover:bg-neutral-950 duration-500 border-x-emerald-300"
           onClick={() => checkAnswer(book.secondBook.book)}
         >
           <div className="flex flex-col items-center justify-center h-full">
