@@ -7,7 +7,7 @@ type Props = {
 
 export const ResetedView = ({ points, handleStartGame }: Props) => {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center p-24">
+    <main className="relative flex min-h-screen flex-col items-center justify-center p-24 bg-black">
       {/* Points accumulated really BIG */}
       <div className="">
         <h2 className="text-4xl lg:text-6xl font-bold text-white font-mono">

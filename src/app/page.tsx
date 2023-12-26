@@ -12,6 +12,7 @@ import { BookTuple, getBookPairs } from "@/logic/getBiblePairs";
 
 import { getFinalMessage } from "@/utils/finalMessage";
 
+const POINTS_DISPLAY_TIME = 500;
 export default function Home() {
   const { isReseted, secondsLeft, startTimer } = use30SecondsCounter();
 
@@ -49,10 +50,10 @@ export default function Home() {
 
     setCurrentAnswer(wasCorrect ? "success" : "fail");
 
-    // Reset answser
+    // Reset answer
     setTimeout(() => {
       setCurrentAnswer(null);
-    }, 600);
+    }, POINTS_DISPLAY_TIME);
 
     const newBook = getBookPairs(getCurrentLevel());
     setBook(newBook);
@@ -80,8 +81,8 @@ export default function Home() {
 
   if (!start) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-24">
-        <h1 className="text-2xl lg:text-4xl font-bold mb-8">El último Libro 📖</h1>
+      <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-black">
+        <h1 className="text-2xl lg:text-4xl font-bold mb-8 text-white">El último Libro 📖</h1>
         <button
           onClick={handleStartGame}
           className="bg-emerald-300 rounded-sm text-neutral-700 p-4 w-32 font-semibold text-xl"
@@ -96,9 +97,9 @@ export default function Home() {
 
   if (start && book) {
     return (
-      <main className="relative flex min-h-screen justify-between flex-wrap max-w-[100vw] overflow-hidden">
+      <main className="relative flex min-h-screen justify-between flex-wrap max-w-[100vw] max-h-[100vh] overflow-hidden">
         <div
-          className="relative flex-1 flex-wrap border-2 cursor-pointer border-x-emerald-300 hover:bg-neutral-950 duration-500"
+          className="relative flex-1 flex-wrap border-2 cursor-pointer border-x-emerald-300 bg-black hover:bg-neutral-950 duration-500"
           onClick={() => checkAnswer(book.firstBook.book)}
         >
           {/* Legend choose the last book */}
@@ -112,7 +113,7 @@ export default function Home() {
         </div>
 
         <div
-          className="cursor-pointer flex-1 hover:bg-neutral-950 duration-500 border-2 border-x-emerald-300"
+          className="cursor-pointer flex-1 hover:bg-neutral-950 duration-500 bg-black border-2 border-x-emerald-300"
           onClick={() => checkAnswer(book.secondBook.book)}
         >
           <CurrentBook book={book.secondBook.book} />
