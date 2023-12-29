@@ -2,11 +2,11 @@
 
 import { ResetedView } from "@/components/ResetedView";
 import { StartView } from "@/components/StartView";
+import { ChooseBookView } from "@/components/ChooseBookView";
 import { PointsLayout } from "@/components/PointsLayout";
 import { TimeUpLayout } from "@/components/TimeUpLayout";
 
 import { useBibleGame } from "@/hooks/useBibleGame";
-import { ChooseBookView } from "@/components/ChooseBookView";
 
 export default function Home() {
   const {
