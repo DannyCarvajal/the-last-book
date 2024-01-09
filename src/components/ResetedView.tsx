@@ -1,11 +1,27 @@
 import { getEmojiFromPoints } from "@/utils/finalMessage";
+import { TimeUpLayout } from "./TimeUpLayout";
+import { useEffect } from "react";
+import { Points } from "@/models/points";
+import { shouldAddToLeaderboard } from "@/utils/leaderboard";
 
 type Props = {
   points: number;
   handleStartGame: () => void;
+  showTimeUp: boolean;
+  username: string;
+  userId: string;
+  currLeaderboard: Points[];
 };
 
-export const ResetedView = ({ points, handleStartGame }: Props) => {
+export const ResetedView = ({ points, handleStartGame, showTimeUp, userId, username, currLeaderboard }: Props) => {
+  /* Update `leaderboard` and `personal best` right after showing reseted view */
+  useEffect(() => {
+    console.log("showing here");
+    const shouldSendToLeaderboard = shouldAddToLeaderboard({ currLeaderboard, newPoints: points });
+  }, []);
+
+  if (showTimeUp) return <TimeUpLayout currPoints={points} />;
+
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center p-24 bg-black">
       {/* Points accumulated really BIG */}

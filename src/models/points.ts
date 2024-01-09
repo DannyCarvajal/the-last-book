@@ -1,11 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 
-const pointsSchema = new mongoose.Schema({
-  id: String,
+export const pointsSchema = new mongoose.Schema({
+  userId: String,
   username: String,
   points: Number,
   date: Date,
-  ip: String,
 });
 
-module.exports = mongoose.model("points", pointsSchema);
+export type Points = InferSchemaType<typeof pointsSchema>;
+
+export const LeaderboardModel = mongoose.models.LeaderBoard || mongoose.model("Leaderboard", pointsSchema);
+export const BestGameModel = mongoose.models.BestGame || mongoose.model("BestGame", pointsSchema);

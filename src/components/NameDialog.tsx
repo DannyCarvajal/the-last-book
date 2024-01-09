@@ -13,14 +13,14 @@ import { isOffensiveWord } from "@/utils/badWords";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  setUserName: Dispatch<string>;
+  setUsername: Dispatch<string>;
 };
 
 export type FormValues = {
   name: string;
 };
 
-export const NameDialog = ({ isOpen, onClose, setUserName }: Props) => {
+export const NameDialog = ({ isOpen, onClose, setUsername }: Props) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const { register, handleSubmit, formState, getValues, reset, setError } = useForm<FormValues>();
@@ -36,7 +36,7 @@ export const NameDialog = ({ isOpen, onClose, setUserName }: Props) => {
     if (!storedUser) return;
 
     onClose();
-    setUserName(name);
+    setUsername(name);
   };
 
   const resetForm = () => {
@@ -114,7 +114,7 @@ export const NameDialog = ({ isOpen, onClose, setUserName }: Props) => {
         <DialogHeader>
           <DialogTitle>Escribe tu nombre completo</DialogTitle>
         </DialogHeader>
-        <p className="mt-1 text-gray-800">Será usado para guardar tus records, y competir en el leaderboard</p>
+        <p className="text-gray-800">Será usado para guardar tus records, y competir en el leaderboard</p>
         <form className="flex gap-4 mt-4 flex-wrap" onSubmit={handleSubmit(onSave)}>
           <div className="flex flex-col flex-wrap gap-2 w-full">
             <Input
@@ -124,7 +124,10 @@ export const NameDialog = ({ isOpen, onClose, setUserName }: Props) => {
                 validate: (value) => validateNameLengthAndSymbols(value),
               })}
             />
-            {errors?.name?.message && <p className="text-red-400 text-sm">{errors.name.message}</p>}
+            {!name && !errors?.name?.message && (
+              <p className="text-gray-800 text-xs">Usa 2 o 3 palabras. Puedes usar números</p>
+            )}
+            {errors?.name?.message && <p className="text-red-400 text-xs">{errors.name.message}</p>}
           </div>
           <Button type="submit" className="bg-emerald-200 w-full text-black hover:bg-emerald-300">
             Guardar

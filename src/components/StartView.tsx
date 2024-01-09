@@ -2,13 +2,13 @@ import { getGreeting } from "@/utils/greeting";
 
 type Props = {
   handleStartGame: () => void;
-  userName: string;
+  username: string;
 };
 
-export const StartView = ({ handleStartGame, userName }: Props) => {
+export const StartView = ({ handleStartGame, username }: Props) => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-black">
-      <h1 className="absolute top-4 left-4 text-sm lg:text-lg mb-8 text-white capitalize">{userName}</h1>
+      <h1 className="absolute top-4 left-4 text-sm lg:text-lg mb-8 text-white capitalize">{username}</h1>
       <h1 className="text-2xl lg:text-4xl font-bold mb-8 text-white">El último Libro 📖</h1>
       <button
         onClick={handleStartGame}
