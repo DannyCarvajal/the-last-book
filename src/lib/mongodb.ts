@@ -1,15 +1,36 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import mongoose from "mongoose";
 
+const isTestEnvironment = process.env.TEST_ENVIRONMENT === "true";
+const testUri = "mongodb://127.0.0.1:27017/test";
 const username = process.env.MONGODB_USERNAME;
 const password = process.env.MONGODB_PASSWORD;
-export const mongodbURI = `mongodb+srv://${username}:<${password}>@biblebooksrating.qqypsvq.mongodb.net/?retryWrites=true&w=majority`;
-console.log({ mongodbURI });
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-export const mongodb = new MongoClient(mongodbURI, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+const mongodbURI = isTestEnvironment
+  ? testUri
+  : `mongodb+srv://${username}:<${password}>@biblebooksrating.qqypsvq.mongodb.net/?retryWrites=true&w=majority`;
+
+/* @ts-expect-error */
+let cached = global.mongoose;
+
+if (!cached) {
+  /* @ts-expect-error */
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectToDB() {
+  if (cached.conn) {
+    console.log("Cached mongodb is called!");
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    mongoose.set("strictQuery", true);
+    cached.promise = await mongoose.connect(mongodbURI);
+    console.log("connected to mongoDB!");
+  }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
+
+export default connectToDB;

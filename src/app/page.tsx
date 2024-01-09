@@ -1,6 +1,7 @@
 "use client";
 
-import mongoose from "mongoose";
+import { useEffect, useState } from "react";
+
 import { ResetedView } from "@/components/ResetedView";
 import { StartView } from "@/components/StartView";
 import { ChooseBookView } from "@/components/ChooseBookView";
@@ -8,11 +9,10 @@ import { PointsLayout } from "@/components/PointsLayout";
 import { TimeUpLayout } from "@/components/TimeUpLayout";
 
 import { useBibleGame } from "@/hooks/useBibleGame";
-import { useEffect, useState } from "react";
 import { NameDialog } from "@/components/NameDialog";
 import useDisclosure from "@/hooks/useDisclosure";
-import { getCookie, getLocalStorage, setCookie } from "@/utils/session";
-import { mongodbURI } from "@/lib/mongodb";
+import { useSetInitCookie } from "@/hooks/useSetInitCookie";
+import { getUserFromLocal } from "@/utils/user";
 
 export default function Home() {
   const [userName, setUserName] = useState("");
@@ -29,36 +29,19 @@ export default function Home() {
     handleStartGame,
   } = useBibleGame();
 
+  useSetInitCookie();
   const { isOpen, close, open } = useDisclosure(false);
 
-  const getUsers = async () => {
-    await mongoose.connect(mongodbURI);
-  };
-
-  // Create a cookie if the user doesn't have one
+  // Open the Name Dialog if no user saved
   useEffect(() => {
-    const localUserName = getLocalStorage("username");
-    const localUserId = getLocalStorage("userId");
+    const user = getUserFromLocal();
+    if (!user) return open();
 
-    const cookieUsername = getCookie("username");
-    const cookieUserId = getCookie("userId");
+    const userHasUsername = user?.localUserName || user?.cookieUsername;
+    if (!userHasUsername) open();
 
-    /* Show Session form on first time  */
-    const isLogged = (!!localUserName && !!localUserId) || (!!cookieUsername && !!cookieUserId);
-    if (!isLogged) {
-      open();
-    }
-
-    /* Save name */
-    setUserName(localUserName || cookieUsername);
-
-    if (!localUserName || !localUserId) return;
-
-    if (!cookieUsername) {
-      // Create a cookie
-      setCookie("username", localUserName, 100);
-      setCookie("userId", localUserId, 100);
-    }
+    setUserName(user.localUserName || user.cookieUsername || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* Finish view when game is completed */
@@ -76,7 +59,7 @@ export default function Home() {
     return (
       <>
         <StartView handleStartGame={handleStartGame} userName={userName} />
-        <NameDialog isOpen={isOpen} onClose={close} />
+        <NameDialog isOpen={isOpen} onClose={close} setUserName={setUserName} />
       </>
     );
   }
