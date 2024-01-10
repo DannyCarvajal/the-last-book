@@ -1,4 +1,4 @@
-import { type FormValues } from "@/components/NameDialog";
+import { type FormValues } from "@/components/RegisterDialog";
 import { type User } from "@/models/user";
 
 import { parseName } from "@/utils/parsing";

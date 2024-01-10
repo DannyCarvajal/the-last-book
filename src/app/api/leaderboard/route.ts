@@ -1,5 +1,6 @@
 import connectToDB from "@/lib/mongodb";
 import { LeaderboardModel, Points } from "@/models/points";
+import mongoose from "mongoose";
 
 export async function GET(request: Request) {
   await connectToDB();
@@ -23,8 +24,6 @@ export async function POST(request: Request) {
     if (!newPoints.date) {
       newPoints.date = new Date();
     }
-
-    console.log({ newPoints });
 
     // Save new User to db
     const mongoUser = new LeaderboardModel(newPoints);

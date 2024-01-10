@@ -13,14 +13,13 @@ import { isOffensiveWord } from "@/utils/badWords";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  setUsername: Dispatch<string>;
 };
 
 export type FormValues = {
   name: string;
 };
 
-export const NameDialog = ({ isOpen, onClose, setUsername }: Props) => {
+export const RegisterDialog = ({ isOpen, onClose }: Props) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const { register, handleSubmit, formState, getValues, reset, setError } = useForm<FormValues>();
@@ -32,11 +31,9 @@ export const NameDialog = ({ isOpen, onClose, setUsername }: Props) => {
   const saveUserToDB = async () => {
     const storedUser = await storeUser({ name });
 
-    /* TODO: Handle error case */
     if (!storedUser) return;
 
     onClose();
-    setUsername(name);
   };
 
   const resetForm = () => {

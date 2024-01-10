@@ -1,3 +1,4 @@
+import { NonNullableFields } from "@/types/utility";
 import mongoose, { InferSchemaType } from "mongoose";
 
 export const pointsSchema = new mongoose.Schema({
@@ -7,7 +8,7 @@ export const pointsSchema = new mongoose.Schema({
   date: Date,
 });
 
-export type Points = InferSchemaType<typeof pointsSchema>;
+export type Points = NonNullableFields<Required<InferSchemaType<typeof pointsSchema>>>;
 
-export const LeaderboardModel = mongoose.models.LeaderBoard || mongoose.model("Leaderboard", pointsSchema);
-export const BestGameModel = mongoose.models.BestGame || mongoose.model("BestGame", pointsSchema);
+export const LeaderboardModel = mongoose.models.Leaderboard || mongoose.model("Leaderboard", pointsSchema);
+export const BestPointsModel = mongoose.models.BestPoints || mongoose.model("BestPoints", pointsSchema);

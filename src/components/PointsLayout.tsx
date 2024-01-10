@@ -1,5 +1,7 @@
+import { type LastAnswerStatus } from "@/hooks/useBibleGame";
+
 type Props = {
-  type: "success" | "fail";
+  type: LastAnswerStatus;
 };
 
 export const PointsLayout = ({ type }: Props) => {

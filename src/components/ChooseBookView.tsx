@@ -1,15 +1,21 @@
 import { CurrentBook } from "@/components/ui/CurrentBook";
 import { SecondsBubble } from "@/components/ui/SecondsBubble";
 import { BookTuple } from "@/logic/getBiblePairs";
+import { PointsLayout } from "./PointsLayout";
+
+import { type LastAnswerStatus } from "@/hooks/useBibleGame";
 
 type Props = {
   currBook: BookTuple | null;
   secondsLeft: number;
   checkAnswer: (book: string) => void;
+  lastAnswerStatus: LastAnswerStatus;
 };
 
-export const ChooseBookView = ({ currBook, secondsLeft, checkAnswer }: Props) => {
+export const ChooseBookView = ({ currBook, secondsLeft, checkAnswer, lastAnswerStatus }: Props) => {
   if (!currBook) return null;
+
+  if (lastAnswerStatus) return <PointsLayout type={lastAnswerStatus} />;
 
   const { firstBook, secondBook } = currBook || {};
   return (
