@@ -4,7 +4,7 @@ import { getUser } from "@/store/user";
 
 export const usePersonalBest = () => {
   const { userId } = getUser();
-  const { data, error, isLoading } = useSWR<Points[]>(`/api/bestPoints?userId=${userId}`);
+  const { data, error, isLoading, mutate } = useSWR<Points[]>(`/api/bestPoints?userId=${userId}`);
 
   const personalBest = data?.[0]?.points;
 
@@ -13,5 +13,6 @@ export const usePersonalBest = () => {
     personalBest,
     error,
     isLoading,
+    mutate,
   };
 };

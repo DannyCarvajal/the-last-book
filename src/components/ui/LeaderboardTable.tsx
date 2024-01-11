@@ -44,14 +44,15 @@ type Props = {
 };
 
 const LeaderBoardTable = ({ leaderboard }: Props) => {
-  const { userId: currUserId } = getUser();
+  const { userId: currUserId, username } = getUser();
+  console.log({ leaderboard, currUserId, username });
   const youAreInLeaderboardToShow = leaderboard.some(({ userId: id }) => id === currUserId);
   const { personalBest } = usePersonalBest();
   console.log({ personalBest });
 
   return (
-    <div className="w-[450px] flex flex-col gap-8">
-      <div className="rounded-lg w-[450px]  bg-white max-w-[90vw] rounded-tl-lg rounded-tr-lg">
+    <div className="w-[450px] max-w-[90vw] flex flex-col gap-8">
+      <div className="rounded-lg  rounded-tl-lg rounded-tr-lg">
         <div className="flex h-16 rounded-tl-lg rounded-tr-lg items-center justify-around bg-[url('https://shots.codepen.io/username/pen/QNzRZp-800.jpg?version=1677465407')]">
           <Trophy size={32} className="text-white" />
           <div className="flex flex-col items-center  justify-center">
@@ -62,7 +63,7 @@ const LeaderBoardTable = ({ leaderboard }: Props) => {
         <div className="flex flex-col">
           {leaderboard.map(({ username, userId, points }, index) => (
             <div
-              className={`flex justify-between items-center h-14 p-2 border-b 
+              className={`flex justify-between items-center h-14 p-2 border-b bg-white
             ${index === leaderboard.length - 1 ? "rounded-bl-lg rounded-br-lg" : "border-gray-200"}
             ${currUserId === userId && "bg-gradient-to-r from-yellow-400 to-orange-500"}
             `}
@@ -80,7 +81,7 @@ const LeaderBoardTable = ({ leaderboard }: Props) => {
       {/* Personal Best */}
       {!youAreInLeaderboardToShow && personalBest && (
         <div className="flex flex-col">
-          <div className="flex justify-between items-center h-14 p-2 border-b  bg-gradient-to-r from-yellow-400 to-orange-500">
+          <div className="flex justify-between items-center h-14 p-2 border-b  bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg">
             <span className="text-gray-200 font-medium text-lg capitalize caret-rose-200">Tu mejor puntuación</span>
             <span className="uppercase text-[15px] text-white">
               <span className="font-bold">{personalBest}</span> Puntos

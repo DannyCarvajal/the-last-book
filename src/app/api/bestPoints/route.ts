@@ -21,12 +21,10 @@ export async function POST(request: Request) {
 
     // Create new user
     const newPoints: Points = await request.json();
-    console.log({ newPoints });
 
     // Check if new value is higher than old value
     const myPrevBest = await BestPointsModel.find({ userId: newPoints.userId });
     const prevHighestValue = (myPrevBest && myPrevBest?.[0]?.points) || null;
-    console.log({ myPrevBest });
 
     // Create date if is not created
     if (!newPoints.date) {
@@ -35,7 +33,6 @@ export async function POST(request: Request) {
 
     // First time saving
     if (!prevHighestValue) {
-      console.log("first time saving");
       const myBest = await BestPointsModel.create(newPoints);
       await myBest.save();
       return Response.json(myBest);

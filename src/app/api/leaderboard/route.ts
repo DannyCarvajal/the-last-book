@@ -1,35 +1,33 @@
 import connectToDB from "@/lib/mongodb";
-import { LeaderboardModel, Points } from "@/models/points";
-import mongoose from "mongoose";
+import { BestPointsModel, Points } from "@/models/points";
+import { selectLeaderboardToShow } from "@/utils/leaderboard";
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const revalidate = false;
+export const fetchCache = "force-no-store";
+export const runtime = "nodejs";
+export const preferredRegion = "auto";
 
 export async function GET(request: Request) {
   await connectToDB();
   try {
-    const leaderboard = await LeaderboardModel.find({});
-    return Response.json(leaderboard);
-  } catch (error) {
-    console.error(error);
-  }
-}
+    const leaderboard: Points[] = await BestPointsModel.find({});
 
-export async function POST(request: Request) {
-  try {
-    // Connect to MongoDB
-    await connectToDB();
+    // Sort by points and recent date
+    const sortedLeaderboards = leaderboard
+      ? leaderboard.sort(function (a, b) {
+          if (a.points === b.points) {
+            return a.date > b.date ? 1 : -1;
+          }
+          return a.points < b.points ? 1 : -1;
+        })
+      : [];
 
-    // Create new user
-    const newPoints: Points = await request.json();
+    // Get the proper amount of results
+    const leaderboardToShow = selectLeaderboardToShow(sortedLeaderboards) || [];
 
-    // Create date if is not created
-    if (!newPoints.date) {
-      newPoints.date = new Date();
-    }
-
-    // Save new User to db
-    const mongoUser = new LeaderboardModel(newPoints);
-    await mongoUser.save();
-
-    return Response.json({ message: `${newPoints.points} Points saved to leaderboard for ${newPoints.username}` });
+    return Response.json(leaderboardToShow);
   } catch (error) {
     console.error(error);
   }

@@ -15,11 +15,11 @@ type Props = {
 export const ChooseBookView = ({ currBook, secondsLeft, checkAnswer, lastAnswerStatus }: Props) => {
   if (!currBook) return null;
 
-  if (lastAnswerStatus) return <PointsLayout type={lastAnswerStatus} />;
+  // if (lastAnswerStatus) return <PointsLayout type={lastAnswerStatus} />;
 
   const { firstBook, secondBook } = currBook || {};
   return (
-    <main className="relative flex min-h-screen justify-between flex-wrap max-w-[100vw] max-h-[100vh] overflow-hidden">
+    <main className="relative flex min-h-screen justify-between flex-wrap max-w-[100vw] max-h-[100svh] overflow-hidden">
       <div
         className="relative flex-1 flex-wrap border-2 cursor-pointer border-x-emerald-300 bg-black hover:bg-neutral-950 duration-500"
         onClick={() => checkAnswer(firstBook.book)}
@@ -31,7 +31,7 @@ export const ChooseBookView = ({ currBook, secondsLeft, checkAnswer, lastAnswerS
         <CurrentBook book={firstBook.book} />
 
         {/* Time left */}
-        <SecondsBubble secondsLeft={secondsLeft} />
+        <SecondsBubble secondsLeft={secondsLeft} lastAnswerStatus={lastAnswerStatus} />
       </div>
 
       <div
