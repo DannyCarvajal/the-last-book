@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <Providers>
-        <body className={`${inter.className} max-h-[100svh] h-[100svh]`}>{children}</body>
-      </Providers>
+      <body className={`${inter.className} h-[100svh]`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

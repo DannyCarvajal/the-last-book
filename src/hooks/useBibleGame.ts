@@ -8,7 +8,7 @@ import { updatePersonalBest } from "@/services/leaderboard";
 import { useLeaderboard } from "./api/useLeaderboard";
 
 const TIME_UP_DURATION = 1500;
-const POINTS_DISPLAY_TIME = 2000;
+const POINTS_DISPLAY_TIME = 1500;
 const POINTS_GAINED_PER_RIGHT_ANSWER = 10;
 const POINTS_LOST_PER_WRONG_ANSWER = 30;
 
@@ -34,6 +34,7 @@ const saveBestPoints = async ({ points, personalBest, username, userId, mutate }
 
 export const useBibleGame = () => {
   const { userId, username } = getUser();
+  const isMobile = typeof window !== "undefined" && window?.innerWidth < 768;
 
   const { isReseted, secondsLeft, startTimer } = use30SecondsCounter();
 
@@ -51,10 +52,12 @@ export const useBibleGame = () => {
   const [showTimeUp, setShowTimeUp] = useState(false);
 
   const points = useRef(0);
+  let timeOut = useRef<NodeJS.Timeout | null>(null);
 
   // After game completes, show timeUp message for some seconds
   useEffect(() => {
     if (!isReseted) return;
+    toast.dismiss();
 
     setShowTimeUp(true);
 
@@ -77,25 +80,33 @@ export const useBibleGame = () => {
 
   const checkAnswer = (selectedBook: string) => {
     if (!currBook || !selectedBook) return;
+    if (timeOut.current) {
+      clearTimeout(timeOut.current);
+    }
+
     toast.dismiss();
 
     const wasCorrect = selectedBook === currBook.correctBook.book;
 
+    const toastStyles = {
+      height: isMobile ? "60px" : "80px",
+      width: isMobile ? "180px" : "220px",
+      fontSize: isMobile ? "1.2rem" : "1.4rem",
+      bottom: isMobile ? "25px" : "0px",
+      fontWeight: "bold",
+      color: "white",
+    };
+
     if (wasCorrect) {
-      console.log("correct");
       points.current += POINTS_GAINED_PER_RIGHT_ANSWER;
       toast.success("+10 Points", {
-        duration: 2000,
+        duration: POINTS_DISPLAY_TIME,
         position: "top-center",
 
         // Styling
         style: {
-          height: "80px",
-          width: "220px",
-          fontSize: "1.4rem",
+          ...toastStyles,
           backgroundColor: "#34d399",
-          fontWeight: "bold",
-          color: "white",
         },
 
         // Change colors of success/error/loading icon
@@ -107,18 +118,13 @@ export const useBibleGame = () => {
     } else {
       points.current -= POINTS_LOST_PER_WRONG_ANSWER;
       toast.error("-30 Points", {
-        duration: 2000,
+        duration: POINTS_DISPLAY_TIME,
         position: "top-center",
 
         // Styling
         style: {
-          height: "80px",
-          width: "220px",
-          fontSize: "1.3rem",
+          ...toastStyles,
           backgroundColor: "#f87171",
-
-          fontWeight: "bold",
-          color: "white",
         },
       });
     }
@@ -126,7 +132,7 @@ export const useBibleGame = () => {
     setLastAnswerStatus(wasCorrect ? "success" : "fail");
 
     // Reset answer
-    setTimeout(() => {
+    timeOut.current = setTimeout(() => {
       setLastAnswerStatus(null);
     }, POINTS_DISPLAY_TIME);
 

@@ -1,5 +1,7 @@
 export function setCookie(cName: string, cValue: string | number, expDays: number) {
   let date = new Date();
+  // if (typeof document === "undefined") return "";
+
   date.setTime(date.getTime() + expDays * 24 * 60 * 60 * 1000);
   const expires = "expires=" + date.toUTCString();
   document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
@@ -7,6 +9,7 @@ export function setCookie(cName: string, cValue: string | number, expDays: numbe
 
 export const getCookie = (cName: string) => {
   const name = cName + "=";
+  // if (typeof document === "undefined") return "";
   const cArr = document.cookie.split(";");
   for (let i = 0; i < cArr.length; i++) {
     let c = cArr[i].trim();

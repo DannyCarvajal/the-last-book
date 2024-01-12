@@ -56,7 +56,7 @@ export const RegisterDialog = ({ isOpen, onClose }: Props) => {
     const badWordRegex = patternRegexLetterFirst.test(value) || patternRegexNumberFirst.test(value);
     if (badWordRegex) return "No puedes usar números como si fueran letras 👀";
 
-    const regex = /^[A-Za-z0-9\s]+$/; // Letters, numbers, and spaces allowed
+    const regex = /^[A-Za-z0-9\sáéíóúüñ¿]+$/; // Letters, numbers, and spaces allowed
     const hasValidSymbols = regex.test(value);
     if (!hasValidSymbols) return "Solo se permiten letras y números 🙌🏻";
   };

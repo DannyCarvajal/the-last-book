@@ -1,8 +1,10 @@
 import { Points } from "@/models/points";
 
 export const selectLeaderboardToShow = (currLeaderboard: Points[]): Points[] => {
-  const ALLOWED_ITEMS = 3;
-  const MAX_ITEMS = 4;
+  const ALLOWED_ITEMS = 5;
+  const MAX_ITEMS = 5;
+
+  if (ALLOWED_ITEMS === MAX_ITEMS) return currLeaderboard.slice(0, ALLOWED_ITEMS);
 
   const differentPoints = Array.from(new Set(currLeaderboard.map(({ points }) => points)));
 

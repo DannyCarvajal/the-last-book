@@ -91,8 +91,6 @@ export function getBookPairs(level: 1 | 2 | 3): BookTuple {
     if (showBooks.greeks && index >= 39) return true;
   });
 
-  console.log({ filteredBibleBooks });
-
   const getRandomBook = (): BookPair => {
     const randomIndex = Math.floor(Math.random() * filteredBibleBooks.length);
     return filteredBibleBooks[randomIndex];

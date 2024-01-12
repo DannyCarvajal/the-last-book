@@ -1,12 +1,14 @@
 export const getEmojiFromPoints = (points: number) => {
-  if (points < -90) return "💀💩💀";
+  if (points < -90) return "💀💩";
   if (points < -60) return "💀💀";
   if (points < -30) return "💀";
   if (points < 0) return "😭";
   if (points < 50) return "👍🏻";
   if (points < 100) return "😀";
   if (points < 150) return "😎";
-  return "🤩";
+  if (points < 190) return "🤩";
+  if (points < 240) return "🤩🖤";
+  return "❤️‍🔥";
 };
 
 const finalMessages = ["Se acabo el tiempo ⌛️!", "Se hizo lo que se pudo!", "Se acabo el tiempo, te tengo Fé 🌚"];

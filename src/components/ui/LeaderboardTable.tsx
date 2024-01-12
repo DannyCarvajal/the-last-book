@@ -1,54 +1,20 @@
-// import { Points } from "@/models/points";
-// import { Trophy } from "lucide-react";
-
-// type Props = {
-//   leaderboard: Points[];
-// };
-
-// const LeaderBoardTable = ({ leaderboard }: Props) => {
-//   return (
-//     <div className="rounded-lg w-[500px] max-w-[90vw] ">
-//       <div className="flex h-24 rounded-tl-lg rounded-tr-lg items-center justify-around bg-[url('https://shots.codepen.io/username/pen/QNzRZp-800.jpg?version=1677465407')]">
-//         <Trophy size={32} className="text-yellow-400" />
-//         <div className="flex flex-col gap-1">
-//           <h2 className="font-extrabold uppercase text-lg text-white">MEJORES</h2>
-//           <span className="font-thin uppercase text-lg text-white">PUNTAJES</span>
-//         </div>
-//       </div>
-//       <div className="flex flex-col">
-//         {leaderboard.map((points, index) => (
-//           <div
-//             className={`flex bg-white justify-between h-16 items-center p-2 ${
-//               index === leaderboard.length - 1 && "rounded-bl-lg rounded-br-lg"
-//             }`}
-//             key={index}
-//           >
-//             <span className="text-gray-600 uppercase font-medium text-lg">{points.username}</span>
-//             <span className="font-semibold text-emerald-950">{points.points} PUNTOS</span>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LeaderBoardTable;
-
 import { usePersonalBest } from "@/hooks/api/usePersonalBest";
 import { Points } from "@/models/points";
 import { getUser } from "@/store/user";
+import { cn } from "@/utils/cn";
 import { Trophy } from "lucide-react";
+import { bgPoints } from "../ResetedView";
 
 type Props = {
   leaderboard: Points[];
+  currPoints: number;
 };
 
-const LeaderBoardTable = ({ leaderboard }: Props) => {
-  const { userId: currUserId, username } = getUser();
-  console.log({ leaderboard, currUserId, username });
+const LeaderBoardTable = ({ leaderboard, currPoints }: Props) => {
+  const { userId: currUserId } = getUser();
   const youAreInLeaderboardToShow = leaderboard.some(({ userId: id }) => id === currUserId);
   const { personalBest } = usePersonalBest();
-  console.log({ personalBest });
+  const thisMatchIsTheBest = currPoints !== personalBest;
 
   return (
     <div className="w-[450px] max-w-[90vw] flex flex-col gap-8">
@@ -61,28 +27,40 @@ const LeaderBoardTable = ({ leaderboard }: Props) => {
           </div>
         </div>
         <div className="flex flex-col">
-          {leaderboard.map(({ username, userId, points }, index) => (
-            <div
-              className={`flex justify-between items-center h-14 p-2 border-b bg-white
+          {leaderboard.map(({ username, userId, points }, index) => {
+            const isYou = currUserId === userId;
+            const isCurrPersonalBest = isYou && thisMatchIsTheBest;
+
+            return (
+              <div
+                className={cn(
+                  `flex justify-between items-center h-14 p-2 border-b bg-white
             ${index === leaderboard.length - 1 ? "rounded-bl-lg rounded-br-lg" : "border-gray-200"}
-            ${currUserId === userId && "bg-gradient-to-r from-yellow-400 to-orange-500"}
-            `}
-              key={index}
-            >
-              <span className="text-gray-200 font-medium text-lg capitalize caret-rose-200">{username}</span>
-              <span className={`text-stone-600 uppercase text-[15px] ${currUserId === userId && "text-white"}`}>
-                <span className="font-bold">{points}</span> Puntos
-              </span>
-            </div>
-          ))}
+            `,
+                  bgPoints({ type: isCurrPersonalBest ? "bestPoints" : undefined })
+                )}
+                key={index}
+              >
+                <span className="text-gray-200 font-medium text-lg capitalize caret-rose-200">{username}</span>
+                <span className={`text-stone-600 uppercase text-[15px] ${isCurrPersonalBest && "text-white"}`}>
+                  <span className="font-bold">{points}</span> Puntos
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Personal Best */}
       {!youAreInLeaderboardToShow && personalBest && (
         <div className="flex flex-col">
-          <div className="flex justify-between items-center h-14 p-2 border-b  bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg">
-            <span className="text-gray-200 font-medium text-lg capitalize caret-rose-200">Tu mejor puntuación</span>
+          <div
+            className={cn(
+              `flex justify-between items-center h-14 p-2 border-b  rounded-lg`,
+              bgPoints({ type: "bestPoints" })
+            )}
+          >
+            <span className="text-white font-medium text-lg capitalize caret-rose-200">Tu mejor puntuación</span>
             <span className="uppercase text-[15px] text-white">
               <span className="font-bold">{personalBest}</span> Puntos
             </span>
