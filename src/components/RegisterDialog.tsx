@@ -1,15 +1,18 @@
 "use client";
 
-import { Dispatch, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { useForm } from "react-hook-form";
+
 import { storeUser, usernameAlreadyUsed } from "@/services/users";
+
 import { parseName } from "@/utils/parsing";
 import { isOffensiveWord } from "@/utils/badWords";
-import toast from "react-hot-toast";
+import { nicknameContainsOneValidName } from "@/utils/compare";
 
 type Props = {
   isOpen: boolean;
@@ -62,6 +65,10 @@ export const RegisterDialog = ({ isOpen, onClose }: Props) => {
     const patternRegexNumberFirst = /\d[a-zA-Z]\d[a-zA-Z]/;
     const badWordRegex = patternRegexLetterFirst.test(value) || patternRegexNumberFirst.test(value);
     if (badWordRegex) return "No puedes usar números como si fueran letras 👀";
+
+    // Must contain at least one valid name or last name
+    const hasOneValidName = nicknameContainsOneValidName(value);
+    if (!hasOneValidName) return "Debes escribir al menos un nombre o apellido válido 😃";
 
     const regex = /^[A-Za-z0-9\sáéíóúüñ¿]+$/; // Letters, numbers, and spaces allowed
     const hasValidSymbols = regex.test(value);

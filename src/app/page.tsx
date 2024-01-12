@@ -4,12 +4,11 @@ import { ResetedView } from "@/components/ResetedView";
 
 import { StartView } from "@/components/StartView";
 import { ChooseBookView } from "@/components/ChooseBookView";
+import { SecondsBubble } from "@/components/ui/SecondsBubble";
+import LottieBubble from "@/components/ui/LottieBubble";
 
 import { useBibleGame } from "@/hooks/useBibleGame";
 import { useSetInitCookie } from "@/hooks/useSetInitCookie";
-import LottieBubble from "@/components/ui/LottieBubble";
-import { SecondsBubble } from "@/components/ui/SecondsBubble";
-import dynamic from "next/dynamic";
 
 export default function Home() {
   useSetInitCookie();
