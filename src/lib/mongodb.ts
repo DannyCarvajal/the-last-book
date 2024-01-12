@@ -7,7 +7,7 @@ const password = process.env.MONGODB_PASSWORD;
 
 const mongodbURI = isTestEnvironment
   ? testUri
-  : `mongodb+srv://${username}:<${password}>@biblebooksrating.qqypsvq.mongodb.net/?retryWrites=true&w=majority`;
+  : `mongodb+srv://${username}:${password}@cluster0.wwvvy4s.mongodb.net/thelastbook?retryWrites=true&w=majority`;
 
 /* @ts-expect-error */
 let cached = global.mongoose;

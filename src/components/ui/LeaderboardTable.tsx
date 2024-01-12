@@ -14,7 +14,7 @@ const LeaderBoardTable = ({ leaderboard, currPoints }: Props) => {
   const { userId: currUserId } = getUser();
   const youAreInLeaderboardToShow = leaderboard.some(({ userId: id }) => id === currUserId);
   const { personalBest } = usePersonalBest();
-  const thisMatchIsTheBest = currPoints !== personalBest;
+  const thisMatchIsTheBest = currPoints === personalBest;
 
   return (
     <div className="w-[450px] max-w-[90vw] flex flex-col gap-8">
@@ -29,7 +29,7 @@ const LeaderBoardTable = ({ leaderboard, currPoints }: Props) => {
         <div className="flex flex-col">
           {leaderboard.map(({ username, userId, points }, index) => {
             const isYou = currUserId === userId;
-            const isCurrPersonalBest = isYou && thisMatchIsTheBest;
+            const isCurrPersonalBest = isYou;
 
             return (
               <div

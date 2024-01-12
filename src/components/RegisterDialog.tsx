@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { storeUser, usernameAlreadyUsed } from "@/services/users";
 import { parseName } from "@/utils/parsing";
 import { isOffensiveWord } from "@/utils/badWords";
+import toast from "react-hot-toast";
 
 type Props = {
   isOpen: boolean;
@@ -29,10 +30,16 @@ export const RegisterDialog = ({ isOpen, onClose }: Props) => {
   const parsedName = parseName(name);
 
   const saveUserToDB = async () => {
+    const loadingToast = toast.loading("Guardando tu usuario...", { position: "bottom-center" });
     const storedUser = await storeUser({ name });
+    toast.dismiss(loadingToast);
 
-    if (!storedUser) return;
+    if (!storedUser) {
+      toast.error("Hubo un error guardando tu usuario 😢", { position: "bottom-center" });
+      return;
+    }
 
+    toast.success("Usuario guardado! 🎉", { position: "bottom-center" });
     onClose();
   };
 

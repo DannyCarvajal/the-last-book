@@ -7,7 +7,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 // Update the meta informatiuon
 export const metadata: Metadata = {
-  title: "The Last Book",
+  title: "Last Book",
+  // Prevent to zoom on mobile
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  description: "The Last Book",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

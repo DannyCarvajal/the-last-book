@@ -14,7 +14,10 @@ export const getEmojiFromPoints = (points: number) => {
 const finalMessages = ["Se acabo el tiempo ⌛️!", "Se hizo lo que se pudo!", "Se acabo el tiempo, te tengo Fé 🌚"];
 
 export const getFinalMessage = (points: number) => {
+  if (points < -30) return "Toca estudiar más 🥲😂!";
   if (points < 0) return "No lo sé Rick ⌛️";
   if (points < 30) return "Mejor algo que nada ⌛️!";
+  if (points > 150) return "Muy bien!";
+  if (points > 190) return "Que crack";
   return finalMessages[Math.floor(Math.random() * finalMessages.length)];
 };
