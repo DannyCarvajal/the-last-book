@@ -7,7 +7,7 @@ import { getUser } from "@/store/user";
 import { updatePersonalBest } from "@/services/leaderboard";
 import { useLeaderboard } from "./api/useLeaderboard";
 
-const TIME_UP_DURATION = 1500;
+const TIME_UP_DURATION = 2200;
 const POINTS_DISPLAY_TIME = 1500;
 const POINTS_GAINED_PER_RIGHT_ANSWER = 10;
 const POINTS_LOST_PER_WRONG_ANSWER = 30;
