@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} h-[100svh]`}>
+      <body className={`${inter.className} h-[100svh]`} suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

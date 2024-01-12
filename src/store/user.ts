@@ -18,3 +18,20 @@ export const getUser = (): User => {
 
   return { username, userId };
 };
+
+// Create a store with zustand
+import { create } from "zustand";
+
+type State = {
+  username: string;
+  updateUsername: (username: string) => void;
+  userId: string;
+  updateUserId: (userId: string) => void;
+};
+
+export const useGetUser = create<State>((set) => ({
+  username: "",
+  updateUsername: (username: string) => set({ username }),
+  userId: "",
+  updateUserId: (userId: string) => set({ userId }),
+}));
