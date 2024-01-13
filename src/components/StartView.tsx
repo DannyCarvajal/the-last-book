@@ -1,36 +1,39 @@
 "use client";
-import { useEffect, useRef } from "react";
+
+import { useEffect } from "react";
+
 import { RegisterDialog } from "@/components/RegisterDialog";
+import AdminDataModal from "./ui/AdminDataModal";
+
 import useDisclosure from "@/hooks/useDisclosure";
-import { getUser } from "@/store/user";
+import { useUser } from "@/hooks/api/useUser";
+import { getLocalStorageOrCookiesUser } from "@/utils/session";
 
 type Props = {
   handleStartGame: () => void;
 };
 
 export const StartView = ({ handleStartGame }: Props) => {
-  const usernameRef = useRef("");
-  // const { username } = getUser();
+  const { username, isAdmin } = useUser();
   const { isOpen, close, open } = useDisclosure(false);
 
-  // On first load, show the register dialog
+  // Check local Data to validate if user exists
   useEffect(() => {
-    const { username, userId } = getUser();
-    usernameRef.current = username || "";
-    if (!username || !userId) return open();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const isTestingMode = process.env.NEXT_PUBLIC_USE_OLIVER_ADMIN_USER === "true";
+    const { userId } = getLocalStorageOrCookiesUser();
+    if (!userId && !isTestingMode) return open();
   }, []);
 
   return (
     <>
       <main className="flex flex-col h-[100svh] items-center justify-center p-24 bg-black ">
-        <h1 className="absolute top-4 left-4 text-base lg:text-xl mb-8 text-white capitalize">
-          Hi {usernameRef.current} 👋🏻
-        </h1>
+        <h1 className="absolute top-4 left-4 text-base lg:text-xl mb-8 text-white capitalize">Hi {username} 👋🏻</h1>
         <div className="left-3 top-14 py-2 px-4 rounded-lg lg:left-auto text-lg font-bold text-white absolute lg:top-8 lg:right-8 bg-gradient-to-r from-emerald-800 to-slate-800">
           elultimolibro.co
         </div>
         <h1 className="text-2xl lg:text-4xl font-bold mb-8 text-white w-max">El Último Libro 📖</h1>
+
+        {isAdmin && <AdminDataModal />}
 
         <button
           onClick={handleStartGame}

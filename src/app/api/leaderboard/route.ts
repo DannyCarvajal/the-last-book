@@ -1,6 +1,5 @@
 import connectToDB from "@/lib/mongodb";
 import { BestPointsModel, Points } from "@/models/points";
-import { selectLeaderboardToShow } from "@/utils/leaderboard";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
@@ -24,10 +23,7 @@ export async function GET(request: Request) {
         })
       : [];
 
-    // Get the proper amount of results
-    const leaderboardToShow = selectLeaderboardToShow(sortedLeaderboards) || [];
-
-    return Response.json(leaderboardToShow);
+    return Response.json(sortedLeaderboards);
   } catch (error) {
     console.error(error);
   }

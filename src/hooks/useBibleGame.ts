@@ -3,9 +3,9 @@ import { toast } from "react-hot-toast";
 import { use30SecondsCounter } from "./use30SecondsCounter";
 import { BookTuple, getBookPairs } from "@/logic/getBiblePairs";
 import { usePersonalBest } from "./api/usePersonalBest";
-import { getUser } from "@/store/user";
 import { updatePersonalBest } from "@/services/leaderboard";
 import { useLeaderboard } from "./api/useLeaderboard";
+import { useUser } from "./api/useUser";
 
 const TIME_UP_DURATION = 2200;
 const POINTS_DISPLAY_TIME = 1500;
@@ -19,32 +19,31 @@ type PointsToUpdate = {
   personalBest: number | null | undefined;
   username: string | null;
   userId: string | null;
-  mutate: () => void;
+  mutateGameData: () => void;
 };
 
-const saveBestPoints = async ({ points, personalBest, username, userId, mutate }: PointsToUpdate) => {
+const saveBestPoints = async ({ points, personalBest, username, userId, mutateGameData }: PointsToUpdate) => {
   const isNewRecord = !personalBest || points > personalBest;
   if (!isNewRecord) return;
   if (!userId || !username) return;
 
+  toast.loading("Saving your new best record 🤩");
   const updated = await updatePersonalBest({ userId, username, points });
-  mutate();
-  console.log({ updated });
+  mutateGameData();
+  toast.dismiss();
+
+  if (updated) {
+    toast.success("Saved");
+  } else {
+    toast.error("Failed to save, sorry 😔");
+  }
 };
 
 export const useBibleGame = () => {
-  const { userId, username } = getUser();
-  const isMobile = typeof window !== "undefined" && window?.innerWidth < 768;
-
+  const { userId, username } = useUser();
   const { isReseted, secondsLeft, startTimer } = use30SecondsCounter();
-
-  const { mutate } = useLeaderboard();
-  const { personalBest, mutate: mutateBest } = usePersonalBest();
-
-  const mutateEp = () => {
-    mutateBest();
-    mutate();
-  };
+  const { personalBest, mutate: mutatePersonalBest } = usePersonalBest();
+  const { mutate: mutateLeaderboard } = useLeaderboard();
 
   const [start, setStart] = useState(false);
   const [currBook, setCurrBook] = useState<BookTuple | null>(null);
@@ -52,7 +51,14 @@ export const useBibleGame = () => {
   const [showTimeUp, setShowTimeUp] = useState(false);
 
   const points = useRef(0);
+
+  const isMobile = typeof window !== "undefined" && window?.innerWidth < 768;
   let timeOut = useRef<NodeJS.Timeout | null>(null);
+
+  const mutateGameData = () => {
+    mutatePersonalBest();
+    mutateLeaderboard();
+  };
 
   // After game completes, show timeUp message for some seconds
   useEffect(() => {
@@ -66,7 +72,9 @@ export const useBibleGame = () => {
     }, TIME_UP_DURATION);
 
     // Update DB
-    saveBestPoints({ points: points.current, personalBest, username, userId, mutate: mutateEp });
+    if (!username || !userId) return;
+
+    saveBestPoints({ points: points.current, personalBest, username, userId, mutateGameData });
   }, [isReseted]);
 
   const handleStartGame = () => {

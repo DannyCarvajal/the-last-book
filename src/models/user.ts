@@ -12,5 +12,5 @@ const userSchema = new mongoose.Schema({
   date: Date,
 });
 
-export type User = InferSchemaType<typeof userSchema>;
+export type User = InferSchemaType<typeof userSchema> & { isAdmin?: boolean };
 export const UserModel = mongoose.models.User || mongoose.model("User", userSchema);

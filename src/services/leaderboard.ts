@@ -35,7 +35,7 @@ export const updatePersonalBest = async ({
       },
     });
     const response = await request.json();
-    return response.ok;
+    return request.ok;
   } catch (error) {
     console.error(error);
     return false;

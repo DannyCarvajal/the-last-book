@@ -1,10 +1,10 @@
 import useSWR from "swr";
 import { Points } from "@/models/points";
-import { getUser } from "@/store/user";
+import { useUser } from "./useUser";
 
 export const usePersonalBest = () => {
-  const { userId } = getUser();
-  const { data, error, isLoading, mutate } = useSWR<Points[]>(`/api/bestPoints?userId=${userId}`);
+  const { userId } = useUser();
+  const { data, error, isLoading, mutate } = useSWR<Points[]>(userId ? `/api/bestPoints?userId=${userId}` : null);
 
   const personalBest = data?.[0]?.points;
 

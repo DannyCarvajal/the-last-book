@@ -8,11 +8,8 @@ import { SecondsBubble } from "@/components/ui/SecondsBubble";
 import LottieBubble from "@/components/ui/LottieBubble";
 
 import { useBibleGame } from "@/hooks/useBibleGame";
-import { useSetInitCookie } from "@/hooks/useSetInitCookie";
 
 export default function Home() {
-  useSetInitCookie();
-
   const {
     start,
     isReseted,

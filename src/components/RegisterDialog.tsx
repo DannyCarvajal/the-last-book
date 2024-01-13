@@ -25,6 +25,7 @@ export type FormValues = {
 
 export const RegisterDialog = ({ isOpen, onClose }: Props) => {
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit, formState, getValues, reset, setError } = useForm<FormValues>();
   const { errors } = formState;
@@ -33,6 +34,7 @@ export const RegisterDialog = ({ isOpen, onClose }: Props) => {
   const parsedName = parseName(name);
 
   const saveUserToDB = async () => {
+    setLoading(true);
     const loadingToast = toast.loading("Guardando tu usuario...", { position: "bottom-center" });
     const storedUser = await storeUser({ name });
     toast.dismiss(loadingToast);
@@ -43,6 +45,8 @@ export const RegisterDialog = ({ isOpen, onClose }: Props) => {
     }
 
     toast.success("Usuario guardado! 🎉", { position: "bottom-center" });
+
+    setLoading(false);
     onClose();
   };
 
@@ -109,7 +113,11 @@ export const RegisterDialog = ({ isOpen, onClose }: Props) => {
               <Button onClick={resetForm} className="bg-red-500 text-black flex-1  hover:bg-red-600">
                 Cambiar
               </Button>
-              <Button onClick={saveUserToDB} className="bg-emerald-200 text-black flex-1 hover:bg-emerald-300">
+              <Button
+                onClick={saveUserToDB}
+                disabled={loading}
+                className="bg-emerald-200 text-black flex-1 hover:bg-emerald-300"
+              >
                 Guardar
               </Button>
             </div>

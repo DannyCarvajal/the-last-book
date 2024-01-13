@@ -20,14 +20,22 @@ export const getCookie = (cName: string) => {
   return "";
 };
 
-export const setLocalStorage = (key: string, value: string) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(key, value);
-  }
-};
-
-export const getLocalStorage = (key: string) => {
+const getLocalStorage = (key: string) => {
   if (typeof window !== "undefined") {
     return localStorage.getItem(key);
   }
+};
+
+export const getLocalStorageOrCookiesUser = (): { username: string | null; userId: string | null } => {
+  const localUsername = getLocalStorage("username");
+  const localUserId = getLocalStorage("userId");
+
+  const cookieUsername = getCookie("username");
+  const cookieUserId = getCookie("userId");
+
+  /* Show Session form on first time  */
+  const username = cookieUsername || localUsername || null;
+  const userId = cookieUserId || localUserId || null;
+
+  return { username, userId };
 };

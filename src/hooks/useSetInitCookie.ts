@@ -1,13 +1,14 @@
 "use client";
 import { useEffect } from "react";
-import { getCookie, setCookie } from "@/utils/session";
-import { getUser, useGetUser } from "@/store/user";
+import { getCookie, getLocalStorageOrCookiesUser, setCookie } from "@/utils/session";
+import { useUser } from "./api/useUser";
 
 // Create a cookie if the user doesn't have one but have localStorage session
 export const useSetInitCookie = () => {
-  const { updateUserId, updateUsername } = useGetUser();
+  const { mutate: mutateUser } = useUser();
+
   useEffect(() => {
-    const { username, userId } = getUser();
+    const { username, userId } = getLocalStorageOrCookiesUser();
     if (!username || !userId) return;
 
     const cookieUsername = getCookie("username");
@@ -16,9 +17,7 @@ export const useSetInitCookie = () => {
       // Create a cookie
       setCookie("username", username, 100);
       setCookie("userId", userId, 100);
+      mutateUser();
     }
-
-    updateUserId(userId);
-    updateUsername(username);
   }, []);
 };
