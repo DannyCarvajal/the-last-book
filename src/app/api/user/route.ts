@@ -2,6 +2,8 @@ import connectToDB from "@/lib/mongodb";
 import { cookies } from "next/headers";
 import { UserModel } from "@/models/user";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   await connectToDB();
   try {
