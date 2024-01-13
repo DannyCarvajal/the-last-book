@@ -13,6 +13,7 @@ import { storeUser, usernameAlreadyUsed } from "@/services/users";
 import { parseName } from "@/utils/parsing";
 import { isOffensiveWord } from "@/utils/badWords";
 import { nicknameContainsOneValidName } from "@/utils/compare";
+import { useUser } from "@/hooks/api/useUser";
 
 type Props = {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export type FormValues = {
 };
 
 export const RegisterDialog = ({ isOpen, onClose }: Props) => {
+  const { mutate: mutateUser } = useUser();
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -46,6 +48,7 @@ export const RegisterDialog = ({ isOpen, onClose }: Props) => {
 
     toast.success("Usuario guardado! 🎉", { position: "bottom-center" });
 
+    mutateUser();
     setLoading(false);
     onClose();
   };
