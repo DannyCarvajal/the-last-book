@@ -1,6 +1,9 @@
 import connectToDB from "@/lib/mongodb";
 import { BestPointsModel, Points } from "@/models/points";
+import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,20 +22,25 @@ export async function POST(request: Request) {
     // Connect to MongoDB
     await connectToDB();
 
-    // Create new user
-    const newPoints: Points = await request.json();
+    const { points } = (await request.json()) || ({} as number);
+
+    const cookieStore = cookies();
+    const userId = cookieStore.get("userId")?.value;
+    const username = cookieStore.get("username")?.value;
+
+    const newPoints = {
+      userId,
+      username,
+      points,
+      date: new Date(),
+    };
 
     // Check if new value is higher than old value
-    const myPrevBest = await BestPointsModel.find({ userId: newPoints.userId });
+    const myPrevBest = await BestPointsModel.find({ userId });
     const prevHighestValue = (myPrevBest && myPrevBest?.[0]?.points) || null;
 
-    // Create date if is not created
-    if (!newPoints.date) {
-      newPoints.date = new Date();
-    }
-
     // First time saving
-    if (!prevHighestValue) {
+    if (prevHighestValue === null || prevHighestValue === undefined) {
       const myBest = await BestPointsModel.create(newPoints);
       await myBest.save();
       return Response.json(myBest);

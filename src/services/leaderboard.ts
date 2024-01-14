@@ -21,15 +21,11 @@ export const updateLeaderboard = async ({
   }
 };
 
-export const updatePersonalBest = async ({
-  username,
-  userId,
-  points,
-}: Pick<Points, "points" | "userId" | "username">) => {
+export const updatePersonalBest = async ({ points }: Pick<Points, "points">) => {
   try {
     const request = await fetch("/api/bestPoints", {
       method: "POST",
-      body: JSON.stringify({ username, userId, points }),
+      body: JSON.stringify({ points }),
       headers: {
         "Content-Type": "application/json",
       },

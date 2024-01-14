@@ -17,18 +17,15 @@ export type LastAnswerStatus = "success" | "fail" | null;
 type PointsToUpdate = {
   points: number;
   personalBest: number | null | undefined;
-  username: string | null;
-  userId: string | null;
   mutateGameData: () => void;
 };
 
-const saveBestPoints = async ({ points, personalBest, username, userId, mutateGameData }: PointsToUpdate) => {
+const saveBestPoints = async ({ points, personalBest, mutateGameData }: PointsToUpdate) => {
   const isNewRecord = !personalBest || points > personalBest;
   if (!isNewRecord) return;
-  if (!userId || !username) return;
 
   toast.loading("Saving your new best record 🤩");
-  const updated = await updatePersonalBest({ userId, username, points });
+  const updated = await updatePersonalBest({ points });
   mutateGameData();
   toast.dismiss();
 
@@ -40,7 +37,6 @@ const saveBestPoints = async ({ points, personalBest, username, userId, mutateGa
 };
 
 export const useBibleGame = () => {
-  const { userId, username } = useUser();
   const { isReseted, secondsLeft, startTimer } = use30SecondsCounter();
   const { personalBest, mutate: mutatePersonalBest } = usePersonalBest();
   const { mutate: mutateLeaderboard } = useLeaderboard();
@@ -71,10 +67,7 @@ export const useBibleGame = () => {
       setShowTimeUp(false);
     }, TIME_UP_DURATION);
 
-    // Update DB
-    if (!username || !userId) return;
-
-    saveBestPoints({ points: points.current, personalBest, username, userId, mutateGameData });
+    saveBestPoints({ points: points.current, personalBest, mutateGameData });
   }, [isReseted]);
 
   const handleStartGame = () => {

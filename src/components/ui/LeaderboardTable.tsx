@@ -13,7 +13,7 @@ type Props = {
 };
 
 const LeaderBoardTable = ({ leaderboard, currPoints, usersWithoutPoints }: Props) => {
-  const { userId: currUserId } = useUser() || {};
+  const { userId: currUserId, isAdmin } = useUser() || {};
   const { personalBest } = usePersonalBest();
 
   const youAreInLeaderboardToShow = leaderboard.some(({ userId: id }) => id === currUserId);
@@ -53,26 +53,27 @@ const LeaderBoardTable = ({ leaderboard, currPoints, usersWithoutPoints }: Props
           })}
 
           {/* Show all users for admin */}
-          {usersWithoutPoints?.map((user, index) => {
-            const { username } = user;
-            const isLastItem = index === usersWithoutPoints.length - 1;
+          {isAdmin &&
+            usersWithoutPoints?.map((user, index) => {
+              const { username } = user;
+              const isLastItem = index === usersWithoutPoints.length - 1;
 
-            return (
-              <div
-                className={cn(
-                  `flex justify-between items-center h-14 p-2 border-b bg-slate-200
+              return (
+                <div
+                  className={cn(
+                    `flex justify-between items-center h-14 p-2 border-b bg-slate-200
           ${isLastItem ? "rounded-bl-lg rounded-br-lg" : "border-gray-200"}
           `
-                )}
-                key={index}
-              >
-                <span className="text-gray-200 font-medium text-lg capitalize caret-rose-200">{username}</span>
-                <span className={`text-stone-600 uppercase text-[15p`}>
-                  <span className="font-bold">Sin Puntos</span>
-                </span>
-              </div>
-            );
-          })}
+                  )}
+                  key={index}
+                >
+                  <span className="text-gray-200 font-medium text-lg capitalize caret-rose-200">{username}</span>
+                  <span className={`text-stone-600 uppercase text-[15p`}>
+                    <span className="font-bold">Sin Puntos</span>
+                  </span>
+                </div>
+              );
+            })}
         </div>
       </div>
 
