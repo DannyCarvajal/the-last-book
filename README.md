@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# 📖 The Last Book
+A fun and challenging game designed to help you learn the order of the books of the Bible! You'll be presented with two book options, and your goal is to choose the one that comes *last* in the Bible. 
 
-First, run the development server:
+![Screenshot 2024-09-21 at 3 16 43 PM](https://github.com/user-attachments/assets/dc32aa5d-5b2f-4cc4-9024-8e1030760d40)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+You have 30 seconds to score as many points as possible:
+- **Correct answers**: +10 points ✅
+- **Incorrect answers**: -30 points ❌
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+At the end of each round, you can check the top 5 rankings of players, along with your personal best score.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![Screenshot 2024-09-21 at 3 18 44 PM](https://github.com/user-attachments/assets/6f5b6544-5955-4a8a-8217-443120b5c099)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## 🚀 Tech Stack
+We built this app using the following technologies:
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js](https://nextjs.org/) 
+- [Tailwind CSS](https://tailwindcss.com/) 
+- [TypeScript](https://www.typescriptlang.org/) 
+- [MongoDB](https://www.mongodb.com/) 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Ranking System
+To track the best scores, we ask players for their name, which is stored using `cookies` and `local storage`. This simple approach is enough for the people that may try this little game, more than this would create friction 😁
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 🛠️ Admin Dashboard
+An admin dashboard is available (for internal use) to view all scores, not just the top 5. 
